@@ -9,6 +9,8 @@ import { Construct } from "constructs";
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 import { generateBatch } from "../shared/util";
 import { movies } from "../seed/movies";
+import { AppApi } from "./app-api";
+import { AuthApi } from "./auth-api";
 
 export class RestAPIStack extends cdk.Stack {
   private auth: apig.IResource;
@@ -24,11 +26,15 @@ export class RestAPIStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
+    const userPoolId = userPool.userPoolId;
+
     this.userPoolId = userPool.userPoolId;
 
     const appClient = userPool.addClient("AppClient", {
       authFlows: { userPassword: true },
     });
+
+    const userPoolClientId = appClient.userPoolClientId;
 
     this.userPoolClientId = appClient.userPoolClientId;
 
@@ -39,6 +45,16 @@ export class RestAPIStack extends cdk.Stack {
         allowOrigins: apig.Cors.ALL_ORIGINS,
       },
     });
+
+    new AuthApi(this, 'AuthServiceApi', {
+      userPoolId: userPoolId,
+      userPoolClientId: userPoolClientId,
+    });
+
+    new AppApi(this, 'AppApi', {
+      userPoolId: userPoolId,
+      userPoolClientId: userPoolClientId,
+    } );
 
     this.auth = authApi.root.addResource("auth");
 
@@ -249,5 +265,7 @@ export class RestAPIStack extends cdk.Stack {
 
     resource.addMethod(method, new apig.LambdaIntegration(fn));
   }  // end private method
+
+  
 } // end class
   
