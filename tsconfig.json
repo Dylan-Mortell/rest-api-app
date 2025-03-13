@@ -22,14 +22,16 @@
     "strictPropertyInitialization": false,
     "typeRoots": [
       "./node_modules/@types"
-    ]
+    ],
+    "resolveJsonModule": true, // This enables JSON imports
+    "esModuleInterop": true     // Ensures compatibility with commonjs modules
   },
   "exclude": [
     "node_modules",
-    "cdk.out" 
-    
+    "cdk.out"
   ],
   "include": [
-    "shared/*.json"
-  ],
+    "shared/*.json",
+    "src/**/*.ts"
+  ]
 }
