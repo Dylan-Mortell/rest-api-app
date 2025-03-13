@@ -50,6 +50,9 @@ export class RestAPIStack extends cdk.Stack {
       'signup.ts'
     );
 
+    this.addAuthRoute('signout', 'GET', 'SignoutFn', 'signout.ts');
+    this.addAuthRoute('signin', 'POST', 'SigninFn', 'signin.ts');
+
     // Tables 
     const moviesTable = new dynamodb.Table(this, "MoviesTable", {
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
