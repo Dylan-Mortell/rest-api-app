@@ -23,8 +23,8 @@
     "typeRoots": [
       "./node_modules/@types"
     ],
-    "resolveJsonModule": true, // This enables JSON imports
-    "esModuleInterop": true     // Ensures compatibility with commonjs modules
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
   "exclude": [
     "node_modules",
@@ -33,5 +33,24 @@
   "include": [
     "shared/*.json",
     "src/**/*.ts"
+  ],
+  "translate": {
+    "handler": "lambdas/translate.handler",
+    "events": [
+      {
+        "http": {
+          "path": "translate",
+          "method": "POST",
+          "cors": true
+        }
+      }
+    ]
+  },
+  "iamRoleStatements": [
+    {
+      "Effect": "Allow",
+      "Action": ["translate:*"],
+      "Resource": "*"
+    }
   ]
 }
