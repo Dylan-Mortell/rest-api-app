@@ -10,6 +10,8 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {    
     const pathParameters  = event?.pathParameters;
     const movieId = pathParameters?.movieId ? parseInt(pathParameters.movieId) : undefined;
 
+
+    console.log("Movie GetCommand response: ", movieId);
     if (!movieId) {
       return {
         statusCode: 404,
@@ -72,4 +74,6 @@ function createDDbDocClient() {
   };
   const translateConfig = { marshallOptions, unmarshallOptions };
   return DynamoDBDocumentClient.from(ddbClient, translateConfig);
+
+  let reviewData: any[] = [];
 }
