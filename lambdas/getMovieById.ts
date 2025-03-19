@@ -33,11 +33,11 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {
       };
     }
 
-    // Fetch the movie
+    // Fetch the movie using the correct partition key: MovieId
     const movieCommandOutput = await ddbDocClient.send(
       new GetCommand({
-        TableName: process.env.TABLE_NAME,
-        Key: { id: movieId },
+        TableName: process.env.Assignment1Table,
+        Key: { MovieId: movieId },  
       })
     );
     console.log("GetCommand response: ", movieCommandOutput);
@@ -51,44 +51,44 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {
       };
     }
 
-    
-    const body = {
+    // Initialize the response body
+    const body: ResponseBody = {
       movie: movieCommandOutput.Item,
       reviews: [],
     };
 
-   
+    
     const queryParams = event?.queryStringParameters;
     const reviewId = queryParams?.reviewId;
     const reviewerName = queryParams?.reviewerName;
 
- 
     let reviewQueryParams: any = {
-      TableName: process.env.REVIEWS_TABLE_NAME,
-      KeyConditionExpression: "movieId = :movieId",
+      TableName: process.env.Assignment1Table,
+      KeyConditionExpression: "MovieId = :movieId", 
       ExpressionAttributeValues: {
         ":movieId": movieId,
       },
     };
 
     if (reviewId) {
-      reviewQueryParams.KeyConditionExpression += " AND reviewId = :reviewId";
-      reviewQueryParams.ExpressionAttributeValues[":reviewId"] = reviewId;
+      reviewQueryParams.KeyConditionExpression += " AND ReviewId = :reviewId";  // Adding ReviewId condition
+      reviewQueryParams.ExpressionAttributeValues[":reviewId"] = parseInt(reviewId);
     }
+
     if (reviewerName) {
-      reviewQueryParams.FilterExpression = "reviewerName = :reviewerName";
+      reviewQueryParams.FilterExpression = "ReviewerId = :reviewerName";  // Filter by reviewer email
       reviewQueryParams.ExpressionAttributeValues[":reviewerName"] = reviewerName;
     }
 
-   
+    // Execute the review query
     const reviewCommandOutput = await ddbDocClient.send(new QueryCommand(reviewQueryParams));
     console.log("Review QueryCommand response: ", reviewCommandOutput);
 
     if (reviewCommandOutput.Items) {
-      body.reviews = reviewCommandOutput.Items;
+      body.reviews = reviewCommandOutput.Items as Review[];
     }
 
-    
+    // Return the response
     return {
       statusCode: 200,
       headers: {
