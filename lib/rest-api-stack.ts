@@ -38,7 +38,7 @@ export class RestAPIStack extends cdk.Stack {
 
     this.userPoolClientId = appClient.userPoolClientId;
 
-    const authApi = new apig.RestApi(this, "AuthServiceApi", {
+    const authApi = new apig.RestApi(this, "AuthApiService", {
       description: "Authentication Service RestApi",
       endpointTypes: [apig.EndpointType.REGIONAL],
       defaultCorsPreflightOptions: {
@@ -46,7 +46,7 @@ export class RestAPIStack extends cdk.Stack {
       },
     });
 
-    new AuthApi(this, 'AuthServiceApi', {
+    new AuthApi(this, 'AuthApiService', {
       userPoolId: userPoolId,
       userPoolClientId: userPoolClientId,
     });
