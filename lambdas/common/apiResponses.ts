@@ -14,6 +14,12 @@ const apiResponses = {
             body: JSON.stringify(body, null, 2),
         };
     },
-};
+    _500: (body: { [key: string]: any }) => {
+        return {
+          statusCode: 500,
+          body: JSON.stringify(body),
+        };
+      },
+    };
 
 export default apiResponses;
