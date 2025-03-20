@@ -8,7 +8,7 @@ const translate = new AWS.Translate();
 
 export const handler: APIGatewayProxyHandler = async (event) => {
     if (!event.body) {
-        return apiResponses._400({ message: 'No body found in the request' });
+        return apiResponses._404({ message: 'No body found in the request' });
     }
 
     const body = JSON.parse(event.body);
@@ -17,11 +17,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const { text, language } = body;
 
     if (!text || typeof text !== 'string') {
-        return apiResponses._400({ message: 'missing or invalid text from the body' });
+        return apiResponses._404({ message: 'missing or invalid text from the body' });
     }
 
     if (!language || typeof language !== 'string') {
-        return apiResponses._400({ message: 'missing or invalid language from the body' });
+        return apiResponses._404({ message: 'missing or invalid language from the body' });
     }
 
     try {
@@ -37,6 +37,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
     } catch (error) {
         console.log('Error in translation:', error);
-        return apiResponses._400({ message: 'Unable to translate the message' });
+        return apiResponses._404({ message: 'Unable to translate the message' });
     }
 };

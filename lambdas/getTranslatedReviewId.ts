@@ -15,14 +15,14 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     const movieId = pathParameters?.movieId ? parseInt(pathParameters.movieId) : undefined;
 
     if (!movieId || !reviewId) {
-        return apiResponses._400({ message: 'Missing movieId or reviewId' });
+        return apiResponses._404({ message: 'Missing movieId or reviewId' });
     }
 
     const queryParams = event?.queryStringParameters;
     const language = queryParams?.language;
 
     if (!language || typeof language !== 'string') {
-        return apiResponses._400({ message: 'Missing or invalid language query parameter' });
+        return apiResponses._404({ message: 'Missing or invalid language query parameter' });
     }
 
     try {
@@ -43,7 +43,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         // Translate the review content
         const translateParams = {
             Text: reviewContent,
-            SourceLanguageCode: 'en',  // Assuming the content is in English
+            SourceLanguageCode: 'en',  
             TargetLanguageCode: language,
         };
 
@@ -54,6 +54,6 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
     } catch (error) {
         console.log('Error:', error);
-        return apiResponses._500({ message: 'Unable to translate the message' });
+        return apiResponses._404({sage: 'Unable to translate the message' });
     }
 };
