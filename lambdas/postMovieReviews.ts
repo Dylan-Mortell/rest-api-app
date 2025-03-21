@@ -23,7 +23,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {
     const reviewData = JSON.parse(event.body || '{}');
     const { movieId, reviewerId, reviewDate, content } = reviewData;
 
-    // Validation of the review data
+    
     if (!movieId || !reviewerId || !reviewDate || !content) {
       return {
         statusCode: 400,
